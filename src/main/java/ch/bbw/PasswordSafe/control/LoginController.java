@@ -8,20 +8,32 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class LoginController {
 
     @Autowired
     private PasswordService pwService;
-
+    @Autowired
+    Credentials credentials;
     @GetMapping("/login")
     public String showLogin(Model model) {
-        return "";
+    	model.addAttribute("credentials", credentials);
+        return "index.html";
     }
 
     @PostMapping("/login")
     public String signIn(@ModelAttribute Credentials credentials) {
+    	
+    	
         return "";
     }
+    
+    @RequestMapping("/index.html")  
+    public String loginError(Model model) {  
+        model.addAttribute("loginError", true);  
+        return "index.html";  
+    }  
+
 }
