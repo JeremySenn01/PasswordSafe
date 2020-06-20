@@ -1,18 +1,28 @@
 package ch.bbw.PasswordSafe.model;
 
 public class Entry {
+    private int id;
     private String url;
     private String username;
     private String password;
     private String notes;
     private String email;
 
-    public Entry(String url, String username, String password, String notes, String email) {
+    public Entry(int id,String url, String username, String password, String notes, String email) {
+        this.id = id;
         this.url = url;
         this.username = username;
         this.password = password;
         this.notes = notes;
         this.email = email;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUrl() {
