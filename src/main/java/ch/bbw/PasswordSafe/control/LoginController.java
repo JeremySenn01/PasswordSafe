@@ -20,14 +20,15 @@ public class LoginController {
     private PasswordService pwService;
     @Autowired
     private AuthenticationService authService;
-
+    
+    
     @GetMapping("/login")
     public String showLogin(Model model) {
         System.out.println("Getting login!");
     	model.addAttribute("credentials", new Credentials());
         model.addAttribute("loginError", false);
 
-        return "index.html";
+        return "login.html";
     }
 
     @PostMapping("/login")
@@ -36,7 +37,7 @@ public class LoginController {
 //        Optional<User> foundUser = authService.signInUser(credentials);
 
 //        if (foundUser.isPresent()) {
-//
+//				
 //        }
         return "";
     }
@@ -45,7 +46,7 @@ public class LoginController {
     public String loginError(Model model) {
         model.addAttribute("loginError", true);
         model.addAttribute("credentials", new Credentials());
-        return "index.html";
+        return "login.html";
     }
 
 }
