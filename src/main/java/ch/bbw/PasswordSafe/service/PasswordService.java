@@ -23,7 +23,6 @@ public class PasswordService {
 	}
 	
 	public void setEntries(List<Entry> entries) {
-		System.out.println("new entries size: " + entries.size());
 		this.entries = entries;
 	}
 }

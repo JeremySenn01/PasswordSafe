@@ -55,26 +55,30 @@ public class AuthenticationService {
 			//if User hasn't got any entries, then nothing has to be decrypted
 			if (foundUser.getEntries() == null) {
 				this.pwService.setEntries(new ArrayList<Entry>());
+				System.out.println("entries was null....");
 			}
 			else {
 				List<Entry> entriesDecrypted = this.decryptData(foundUser.getEntries().getBytes());
 				this.pwService.setEntries(entriesDecrypted);
-				System.out.println("decrypted: " + entriesDecrypted.get(0) + " / " + entriesDecrypted);
-							
+				System.out.println("decrypted: " + entriesDecrypted.get(0) + " / " + entriesDecrypted);		
 			}
 		}
 		return possibleUser.isPresent();
 	}
 
-	public boolean logout() {
+	public void logout() {
 		//There is a logged in user
 		if (this.currentUserId != 0) {
 			List<Entry> decryptedEntries = pwService.getAllEntries();
 			byte[] encryptedEntries = this.encryptData(decryptedEntries);
-			
-			
+			this.dao.updateEntries(encryptedEntries, this.currentUserId);
+			this.resetUserData();
 		}
-		return false;
+	}
+	
+	private void resetUserData() {
+		this.currentUserId = 0;
+		this.key = null;
 	}
 	
 	/**
@@ -93,7 +97,6 @@ public class AuthenticationService {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		System.out.println("key failure");
 	}
 
 	private List<Entry> decryptData(byte[] encryptedEntries) {

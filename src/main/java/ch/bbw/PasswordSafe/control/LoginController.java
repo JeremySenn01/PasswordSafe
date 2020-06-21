@@ -49,5 +49,11 @@ public class LoginController {
 		model.addAttribute("credentials", new Credentials());
 		return "login.html";
 	}
+	
+	@GetMapping("/logout")
+	public String logout() {
+		this.authService.logout();
+		return "redirect:/login";
+	}
 
 }

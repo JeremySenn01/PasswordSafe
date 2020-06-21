@@ -30,15 +30,17 @@ public class Dao {
     	return Optional.empty();
     }
 
-    public Entry addEntry(Entry entry, int userId) {
-        return null;
-    }
-
-    public void deleteEntry(int entryId) {
-
-    }
-
-    public Entry updateEntry(Entry entry) {
-        return null;
+    /**
+     * This method updates the users encrypted entries
+     * @param encryptedEntries - byte[] encrypted
+     * @param currentUserId - id of user to change
+     */
+    public void updateEntries(byte[] encryptedEntries, int currentUserId) {
+        for(User user : this.users) {
+        	if (user.getId() == currentUserId) {
+        		user.setEntries(new String(encryptedEntries));
+        		System.out.println("found the user...");
+        	}
+        }
     }
 }
