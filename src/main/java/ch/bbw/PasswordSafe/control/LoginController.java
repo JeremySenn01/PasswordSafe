@@ -40,7 +40,7 @@ public class LoginController {
 				
         }
         
-        return "login.html";
+        return "passwordmanager.html";
     }
 
     @GetMapping("/failedLogin")

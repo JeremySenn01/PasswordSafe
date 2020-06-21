@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>New Entry</title>
+<link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"></link>
+</head>
+<body>
+
+	<form action="#" th:action="@{/addentry}"
+		th:object="${newEntry}" method="post" class="col-sm-4">
+		<div class="form-group">
+			<label for="nameId">Id:</label> <input type="text"
+				class="form-control" id="nameId" th:field="*{id}" /> 
+			<label for="prenameId">Url:</label> <input type="text" class="form-control"
+				id="prenameId" th:field="*{url}" /> 
+			<label for="prenameId">Username:</label> <input type="text" class="form-control"
+				id="prenameId" th:field="*{username}" />
+			<label for="prenameId">Password:</label> <input type="text" class="form-control"
+				id="prenameId" th:field="*{password}" /> 
+			<label for="prenameId">Notes:</label> <input type="text" class="form-control"
+				id="prenameId" th:field="*{notes}" /> 
+			<label for="prenameId">Email:</label> <input type="text" class="form-control"
+				id="prenameId" th:field="*{email}" /> 
+				<input type="submit" class="btn btn-success" value="Hinzufügen" />
+	</form>
+</body>
+</html>
