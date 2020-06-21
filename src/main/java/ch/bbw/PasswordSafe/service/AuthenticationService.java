@@ -1,31 +1,32 @@
 package ch.bbw.PasswordSafe.service;
 
-import ch.bbw.PasswordSafe.dao.Dao;
-import ch.bbw.PasswordSafe.model.Credentials;
-import ch.bbw.PasswordSafe.model.Entry;
-import ch.bbw.PasswordSafe.model.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.SessionScope;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-import javax.swing.text.html.Option;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
-import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.SessionScope;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ch.bbw.PasswordSafe.dao.Dao;
+import ch.bbw.PasswordSafe.model.Credentials;
+import ch.bbw.PasswordSafe.model.Entry;
+import ch.bbw.PasswordSafe.model.User;
 
 @Service
 @SessionScope
@@ -33,11 +34,13 @@ public class AuthenticationService {
 
 	@Autowired
 	private Dao dao;
-
+	@Autowired
+	private PasswordService pwService;
+	
 	private int currentUserId;
-	private List<Entry> decryptedEntries;
+	private byte[] key;
 
-	public Optional<User> signInUser(Credentials credentials) {
+	public boolean signInUser(Credentials credentials) {
 		String hash = hashPw(credentials.getPassword());
 
 		System.out.println("hash: " + hash);
@@ -47,29 +50,33 @@ public class AuthenticationService {
 		if (possibleUser.isPresent()) {
 			User foundUser = possibleUser.get();
 			this.currentUserId = foundUser.getId();
-
-//			byte[] encrypted = this.encryptData(this.decryptedEntries, hash);
-//			System.out.println("encrypted: " + encrypted);
-			
-//			byte[] encrypted = this.encryptData(foundUser.getEntries(), hash);
-//			System.out.println("encrypted: " + encrypted);
-//			System.out.println(new String(encrypted, StandardCharsets.UTF_8));
+			this.setKey(hash);
 			
 			//if User hasn't got any entries, then nothing has to be decrypted
 			if (foundUser.getEntries() == null) {
-				
+				this.pwService.setEntries(new ArrayList<Entry>());
 			}
 			else {
-				List<Entry> entriesDecrypted = this.decryptData(foundUser.getEntries().getBytes(), hash);
+				List<Entry> entriesDecrypted = this.decryptData(foundUser.getEntries().getBytes());
+				this.pwService.setEntries(entriesDecrypted);
 				System.out.println("decrypted: " + entriesDecrypted.get(0) + " / " + entriesDecrypted);
-				
+							
 			}
-			
-			return possibleUser;
 		}
-		return Optional.empty();
+		return possibleUser.isPresent();
 	}
 
+	public boolean logout() {
+		//There is a logged in user
+		if (this.currentUserId != 0) {
+			List<Entry> decryptedEntries = pwService.getAllEntries();
+			byte[] encryptedEntries = this.encryptData(decryptedEntries);
+			
+			
+		}
+		return false;
+	}
+	
 	/**
 	 * This method uses MD5 to shorten the master password to 128 bits, so it has
 	 * the correct length of an AES-Key
@@ -77,25 +84,23 @@ public class AuthenticationService {
 	 * @param pwHash - hash of master pw
 	 * @return byte[]
 	 */
-	private byte[] getKey(String pwHash) {
+	private void setKey(String pwHash) {
 		byte[] pwHashBytes = pwHash.getBytes();
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
-			return md.digest(pwHashBytes);
+			this.key = md.digest(pwHashBytes);
 
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 		System.out.println("key failure");
-		return new byte[] {};
 	}
 
-	private List<Entry> decryptData(byte[] encryptedEntries, String pwHash) {
+	private List<Entry> decryptData(byte[] encryptedEntries) {
 		try {
-			byte[] key = this.getKey(pwHash);
 			ObjectMapper mapper = new ObjectMapper();
 			Cipher c = Cipher.getInstance("AES");
-			SecretKeySpec k = new SecretKeySpec(key, "AES");
+			SecretKeySpec k = new SecretKeySpec(this.key, "AES");
 			c.init(Cipher.DECRYPT_MODE, k);
 			byte[] decryptedEntries = c.doFinal(encryptedEntries);
 			String jsonString = new String(decryptedEntries);
@@ -110,16 +115,15 @@ public class AuthenticationService {
 		return null;
 	}
 
-	private byte[] encryptData(List<Entry> entries, String pwHash) {
+	private byte[] encryptData(List<Entry> entries) {
 		// list to json string
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			String jsonString = mapper.writeValueAsString(entries);
 			byte[] byteStream = jsonString.getBytes(StandardCharsets.UTF_8);
-			byte[] key = this.getKey(pwHash);
 
 			Cipher c = Cipher.getInstance("AES");
-			SecretKeySpec k = new SecretKeySpec(key, "AES");
+			SecretKeySpec k = new SecretKeySpec(this.key, "AES");
 			c.init(Cipher.ENCRYPT_MODE, k);
 			return c.doFinal(byteStream);
 

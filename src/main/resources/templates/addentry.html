@@ -3,26 +3,32 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>New Entry</title>
-<link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"></link>
+<link href="webjars/bootstrap/4.5.0/css/bootstrap.min.css"
+	rel="stylesheet"></link>
 </head>
 <body>
-
-	<form action="#" th:action="@{/addentry}"
-		th:object="${newEntry}" method="post" class="col-sm-4">
-		<div class="form-group">
-			<label for="nameId">Id:</label> <input type="text"
-				class="form-control" id="nameId" th:field="*{id}" /> 
-			<label for="prenameId">Url:</label> <input type="text" class="form-control"
-				id="prenameId" th:field="*{url}" /> 
-			<label for="prenameId">Username:</label> <input type="text" class="form-control"
-				id="prenameId" th:field="*{username}" />
-			<label for="prenameId">Password:</label> <input type="text" class="form-control"
-				id="prenameId" th:field="*{password}" /> 
-			<label for="prenameId">Notes:</label> <input type="text" class="form-control"
-				id="prenameId" th:field="*{notes}" /> 
-			<label for="prenameId">Email:</label> <input type="text" class="form-control"
-				id="prenameId" th:field="*{email}" /> 
-				<input type="submit" class="btn btn-success" value="Hinzufügen" />
-	</form>
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Add an Entry</h1>
+			<form action="#" th:action="@{/submitEntry}" th:object="${newEntry}"
+				method="post" class="col-sm-4">
+				<div class="form-group">
+					<label for="id">Id:</label> <input type="text"
+						class="form-control" id="id" th:field="*{id}" /> <label
+						for="urlId">Url:</label> <input type="text"
+						class="form-control" id="urlId" th:field="*{url}" /> <label
+						for="unameId">Username:</label> <input type="text"
+						class="form-control" id="unameId" th:field="*{username}" /> <label
+						for="pwId">Password:</label> <input type="password"
+						class="form-control" id="pwId" th:field="*{password}" /> <label
+						for="notesId">Notes:</label> <input type="text"
+						class="form-control" id="notesId" th:field="*{notes}" /> <label
+						for="emailId">Email:</label> <input type="text"
+						class="form-control" id="emailId" th:field="*{email}" /> <input
+						type="submit" class="btn btn-success" value="Add" />
+				</div>
+			</form>
+		</div>
+	</div>
 </body>
 </html>
