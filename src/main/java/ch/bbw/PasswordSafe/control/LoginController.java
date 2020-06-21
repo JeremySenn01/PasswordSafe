@@ -33,13 +33,14 @@ public class LoginController {
 
     @PostMapping("/login")
     public String signIn(@ModelAttribute Credentials credentials) {
-        System.out.println("signing in");
-//        Optional<User> foundUser = authService.signInUser(credentials);
+        System.out.println("signing in: " + credentials.getUsername() + " / " + credentials.getPassword());
+        Optional<User> foundUser = authService.signInUser(credentials);
 
-//        if (foundUser.isPresent()) {
-//				
-//        }
-        return "";
+        if (foundUser.isPresent()) {
+				
+        }
+        
+        return "login.html";
     }
 
     @GetMapping("/failedLogin")

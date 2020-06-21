@@ -16,6 +16,10 @@ public class Entry {
         this.notes = notes;
         this.email = email;
     }
+    
+    public Entry() {
+    	
+    }
 
     public int getId() {
         return id;

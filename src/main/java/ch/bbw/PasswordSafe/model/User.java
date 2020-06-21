@@ -1,19 +1,17 @@
 package ch.bbw.PasswordSafe.model;
 
-import java.util.List;
-
 public class User {
 
     private int id;
     private String username;
     private String password;
-    private List<Entry> entries;
+    private String entries;
 
-    public User(int id, String username, String password, List<Entry> entries) {
+    public User(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.entries = entries;
+        this.entries = null;
     }
 
     public int getId() {
@@ -40,15 +38,12 @@ public class User {
         this.password = password;
     }
 
-    public List<Entry> getEntries() {
+    public  String getEntries() {
         return entries;
     }
 
-    public void setEntries(List<Entry> entries) {
+    public void setEntries(String entries) {
         this.entries = entries;
     }
 
-    public void addEntry(Entry entry) {
-        this.entries.add(entry);
-    }
 }
