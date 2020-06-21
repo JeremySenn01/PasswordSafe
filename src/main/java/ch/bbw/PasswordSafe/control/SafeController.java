@@ -1,6 +1,8 @@
 package ch.bbw.PasswordSafe.control;
 
+import ch.bbw.PasswordSafe.dao.Dao;
 import ch.bbw.PasswordSafe.model.Entry;
+import ch.bbw.PasswordSafe.service.AuthenticationService;
 import ch.bbw.PasswordSafe.service.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,20 +16,26 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class SafeController {
 
     @Autowired
-    private PasswordService pwService;
+    private AuthenticationService pwService;
 
     @GetMapping("/")
     public String getEntries(Model model) {
-        return "";
+    	model.addAttribute("allEntries", pwService.getAllEnries());
+		model.addAttribute("newentrie", new Entry());
+		return "pwService";
+
     }
 
-    @PostMapping("/")
-    public String addEntry(@ModelAttribute Entry newEntry) {
-        return "";
+    @PostMapping("addEntry")
+    public String addEntry(@ModelAttribute Entry newEntry, Model model) {
+    	pwService.addEntrie(newEntry);
+		model.addAttribute("allEntries", pwService.getAllEntries());
+        return "redirect:/passwordmanager.html";
     }
 
     @PutMapping("/")
     public String updateEntry(@ModelAttribute Entry updateEntry) {
         return null;
     }
+    
 }
