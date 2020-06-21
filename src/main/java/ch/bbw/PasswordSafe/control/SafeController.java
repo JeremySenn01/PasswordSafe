@@ -16,21 +16,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class SafeController {
 
     @Autowired
-    private AuthenticationService pwService;
+    private PasswordService pwService;
 
     @GetMapping("/")
     public String getEntries(Model model) {
-    	model.addAttribute("allEntries", pwService.getAllEnries());
-		model.addAttribute("newentrie", new Entry());
+    	model.addAttribute("allEntries", pwService.getAllEntries());
+		model.addAttribute("newentry", new Entry(0, null, null, null, null, null));
 		return "pwService";
 
     }
 
-    @PostMapping("addEntry")
+    @PostMapping("/addEntry")
     public String addEntry(@ModelAttribute Entry newEntry, Model model) {
     	pwService.addEntrie(newEntry);
 		model.addAttribute("allEntries", pwService.getAllEntries());
-        return "redirect:/passwordmanager.html";
+        return "redirect:/addentry";
     }
 
     @PutMapping("/")
