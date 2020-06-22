@@ -15,6 +15,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
@@ -40,6 +41,11 @@ public class AuthenticationService {
 	private int currentUserId;
 	private byte[] key;
 
+	public boolean hasCurrentUser() {
+		System.out.println("current user: " + this.currentUserId);
+		return currentUserId != 0;
+	}
+	
 	public boolean signInUser(Credentials credentials) {
 		String hash = hashPw(credentials.getPassword());
 
@@ -58,19 +64,17 @@ public class AuthenticationService {
 				System.out.println("entries was null....");
 			}
 			else {
-				List<Entry> entriesDecrypted = this.decryptData(foundUser.getEntries().getBytes());
+				List<Entry> entriesDecrypted = this.decryptData(foundUser.getEntries());
 				this.pwService.setEntries(entriesDecrypted);
-				System.out.println("decrypted: " + entriesDecrypted.get(0) + " / " + entriesDecrypted);		
 			}
 		}
 		return possibleUser.isPresent();
 	}
 
 	public void logout() {
-		//There is a logged in user
-		if (this.currentUserId != 0) {
+		if (this.hasCurrentUser()) {
 			List<Entry> decryptedEntries = pwService.getAllEntries();
-			byte[] encryptedEntries = this.encryptData(decryptedEntries);
+			String encryptedEntries = this.encryptData(decryptedEntries);
 			this.dao.updateEntries(encryptedEntries, this.currentUserId);
 			this.resetUserData();
 		}
@@ -99,13 +103,15 @@ public class AuthenticationService {
 		}
 	}
 
-	private List<Entry> decryptData(byte[] encryptedEntries) {
+	private List<Entry> decryptData(String encryptedEntriesB64) {
+		System.out.println("decrypt: key = " + this.key.length);
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			Cipher c = Cipher.getInstance("AES");
 			SecretKeySpec k = new SecretKeySpec(this.key, "AES");
 			c.init(Cipher.DECRYPT_MODE, k);
-			byte[] decryptedEntries = c.doFinal(encryptedEntries);
+			byte[] b64DecodedBytes = Base64.decodeBase64(encryptedEntriesB64);
+			byte[] decryptedEntries = c.doFinal(b64DecodedBytes);
 			String jsonString = new String(decryptedEntries);
 			return mapper.readValue(jsonString, new TypeReference<List<Entry>>() {
 			});
@@ -118,7 +124,7 @@ public class AuthenticationService {
 		return null;
 	}
 
-	private byte[] encryptData(List<Entry> entries) {
+	private String encryptData(List<Entry> entries) {
 		// list to json string
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -128,7 +134,8 @@ public class AuthenticationService {
 			Cipher c = Cipher.getInstance("AES");
 			SecretKeySpec k = new SecretKeySpec(this.key, "AES");
 			c.init(Cipher.ENCRYPT_MODE, k);
-			return c.doFinal(byteStream);
+			byte[] bytes = c.doFinal(byteStream);
+			return Base64.encodeBase64String(bytes);
 
 		} catch (JsonProcessingException | BadPaddingException | NoSuchPaddingException | IllegalBlockSizeException
 				| InvalidKeyException | NoSuchAlgorithmException e) {

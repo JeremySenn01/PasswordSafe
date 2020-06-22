@@ -1,5 +1,6 @@
 package ch.bbw.PasswordSafe.dao;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -35,11 +36,11 @@ public class Dao {
      * @param encryptedEntries - byte[] encrypted
      * @param currentUserId - id of user to change
      */
-    public void updateEntries(byte[] encryptedEntries, int currentUserId) {
+    public void updateEntries(String encryptedEntries, int currentUserId) {
         for(User user : this.users) {
         	if (user.getId() == currentUserId) {
-        		user.setEntries(new String(encryptedEntries));
-        		System.out.println("found the user...");
+        		user.setEntries(encryptedEntries);
+        		System.out.println("saving entries: " + encryptedEntries.length());
         	}
         }
     }

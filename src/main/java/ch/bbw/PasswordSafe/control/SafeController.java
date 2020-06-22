@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import ch.bbw.PasswordSafe.model.Entry;
+import ch.bbw.PasswordSafe.service.AuthenticationService;
 import ch.bbw.PasswordSafe.service.PasswordService;
 
 @Controller
@@ -19,9 +20,14 @@ public class SafeController {
 
     @Autowired
     private PasswordService pwService;
+    @Autowired
+    private AuthenticationService authService;
 
     @GetMapping("/safe")
     public String getSafe(Model model) {
+    	if (!authService.hasCurrentUser()) {
+    		return "redirect:/login";
+    	}
     	List<Entry> entries = pwService.getAllEntries();
     	System.out.println("entries.length = " + entries.size());
     	model.addAttribute("allEntries", entries);
