@@ -1,7 +1,11 @@
 package ch.bbw.PasswordSafe.model;
 
+import javax.validation.constraints.NotNull;
+
 public class Credentials {
+    @NotNull(message = "Username can't be empty")
     private String username;
+    @NotNull(message = "Password can't be empty")
     private String password;
 
     public Credentials(String username, String password) {

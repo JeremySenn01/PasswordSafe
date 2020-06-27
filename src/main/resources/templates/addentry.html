@@ -1,34 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="ISO-8859-1">
-<title>New Entry</title>
-<link href="webjars/bootstrap/4.5.0/css/bootstrap.min.css"
-	rel="stylesheet"></link>
+    <meta charset="ISO-8859-1">
+    <title>New Entry</title>
+    <link href="webjars/bootstrap/4.5.0/css/bootstrap.min.css"
+          rel="stylesheet"/>
 </head>
 <body>
-	<div class="row">
-		<div class="col-md-12">
-			<h1>Add an Entry</h1>
-			<form action="#" th:action="@{/submitEntry}" th:object="${newEntry}"
-				method="post" class="col-sm-4">
-				<div class="form-group">
-					<label for="id">Id:</label> <input type="text"
-						class="form-control" id="id" th:field="*{id}" /> <label
-						for="urlId">Url:</label> <input type="text"
-						class="form-control" id="urlId" th:field="*{url}" /> <label
-						for="unameId">Username:</label> <input type="text"
-						class="form-control" id="unameId" th:field="*{username}" /> <label
-						for="pwId">Password:</label> <input type="password"
-						class="form-control" id="pwId" th:field="*{password}" /> <label
-						for="notesId">Notes:</label> <input type="text"
-						class="form-control" id="notesId" th:field="*{notes}" /> <label
-						for="emailId">Email:</label> <input type="text"
-						class="form-control" id="emailId" th:field="*{email}" /> <input
-						type="submit" class="btn btn-success" value="Add" />
-				</div>
-			</form>
-		</div>
-	</div>
+<div class="row">
+    <div class="col-md-12">
+        <h1>Add an Entry</h1>
+        <form action="#" th:action="@{/submitEntry}" th:object="${newEntry}"
+              method="post" class="col-sm-4">
+            <div class="form-group">
+                <label
+                        for="urlId">Url:</label> <input type="text"
+                                                        class="form-control" id="urlId" th:field="*{url}"/>
+                <label
+                        for="unameId">Username:</label> <input type="text"
+                                                               class="form-control" id="unameId"
+                                                               th:field="*{username}"/>
+                <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</p>
+                <label
+                        for="pwId">Password:</label> <input type="password"
+                                                            class="form-control" id="pwId" th:field="*{password}"/>
+                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password Error</p>
+
+                <label
+                        for="notesId">Notes:</label> <input type="text"
+                                                            class="form-control" id="notesId" th:field="*{notes}"/>
+                <label
+                        for="emailId">Email:</label> <input type="text"
+                                                            class="form-control" id="emailId" th:field="*{email}"/>
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</p>
+                <input
+                        type="submit" class="btn btn-success" value="Add"/>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>

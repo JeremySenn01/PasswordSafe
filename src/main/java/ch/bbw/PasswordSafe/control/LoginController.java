@@ -11,6 +11,8 @@ import ch.bbw.PasswordSafe.model.Credentials;
 import ch.bbw.PasswordSafe.service.AuthenticationService;
 import ch.bbw.PasswordSafe.service.PasswordService;
 
+import javax.validation.Valid;
+
 @Controller
 public class LoginController {
 
@@ -29,7 +31,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-    public String signIn(@ModelAttribute Credentials credentials) {
+    public String signIn(@Valid @ModelAttribute Credentials credentials) {
         System.out.println("signing in: " + credentials.getUsername() + " / " + credentials.getPassword());
         boolean foundUser = authService.signInUser(credentials);
 

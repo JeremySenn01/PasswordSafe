@@ -1,14 +1,20 @@
 package ch.bbw.PasswordSafe.model;
+import javax.validation.constraints.*;
+import java.util.UUID;
 
 public class Entry {
-    private int id;
+    private UUID id;
     private String url;
+    @NotNull(message = "username can't be empty")
     private String username;
+    @NotNull(message = "username can't be empty")
+    @Size(min = 5, max = 20, message = "must be between 5 and 20 characters")
     private String password;
     private String notes;
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email is invalid")
     private String email;
 
-    public Entry(int id,String url, String username, String password, String notes, String email) {
+    public Entry(UUID id,String url, String username, String password, String notes, String email) {
         this.id = id;
         this.url = url;
         this.username = username;
@@ -18,15 +24,15 @@ public class Entry {
     }
     
     public Entry() {
-    	
+    	this.id = UUID.randomUUID();
     }
 
-    public int getId() {
-        return id;
+    public String getId() {
+        return id.toString();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = UUID.fromString(id);
     }
 
     public String getUrl() {
