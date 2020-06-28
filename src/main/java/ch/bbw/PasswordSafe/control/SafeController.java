@@ -1,5 +1,6 @@
 package ch.bbw.PasswordSafe.control;
 
+import ch.bbw.PasswordSafe.model.Credentials;
 import ch.bbw.PasswordSafe.model.Entry;
 import ch.bbw.PasswordSafe.service.AuthenticationService;
 import ch.bbw.PasswordSafe.service.PasswordService;
@@ -45,7 +46,9 @@ public class SafeController {
     @PostMapping("/submitEntry")
     public String addEntry(@Valid Entry newEntry, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            System.out.println("error!!!");
+        	bindingResult.getAllErrors();
+
+            System.out.println(bindingResult);
             model.addAttribute("newEntry", newEntry);
             return "addentry";
         }

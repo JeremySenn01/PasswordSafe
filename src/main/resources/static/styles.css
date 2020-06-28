@@ -3,7 +3,7 @@
 
 
 h1{
-	width: 100%;
+	width: 40%;
 	margin:auto;
 	border-bottom: solid black 2px;
 }
@@ -43,6 +43,8 @@ button:hover {
 /* Add padding to containers */
 .container {
   padding: 16px;
+  width: 40%;
+  margin:auto;
 }
 
 /* The "Forgot password" text */
