@@ -7,7 +7,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service
 @SessionScope
@@ -21,6 +21,7 @@ public class PasswordService {
     }
 
     public void addEntry(Entry entry) {
+        entry.setId(UUID.randomUUID().toString());
         entries.add(entry);
     }
 
@@ -30,14 +31,17 @@ public class PasswordService {
     }
 
     public void updateEntry(Entry entry) {
-        entries = entries.stream()
-                .filter(e -> e.getId().equals(entry.getId()))
-                .map(e -> e = entry)
-                .collect(Collectors.toList());
+        for (Entry e : entries) {
+            if (e.getId().equals(entry.getId())) {
+                int index = entries.indexOf(e);
+                entries.remove(index);
+                entries.add(index, entry);
+            }
+        }
     }
 
     public Optional<Entry> getEntryById(String id) {
-       return entries.stream().filter(e -> e.getId().equals(id)).findAny();
+        return entries.stream().filter(e -> e.getId().equals(id)).findAny();
     }
 
     public void setEntries(List<Entry> entries) {

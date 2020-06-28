@@ -2,40 +2,27 @@ package ch.bbw.PasswordSafe.model;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.util.UUID;
 
 public class Entry {
-    private UUID id;
+    private String id;
     private String url;
     @NotNull(message = "username can't be empty")
     private String username;
-    @NotNull(message = "username can't be empty")
-    @Size(min = 5, max = 20, message = "must be between 5 and 20 characters")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,20}$", message = "Must contain 4-20 characters, at least 1 upperCase, 1 lowerCase and 1 digit")
     private String password;
     private String notes;
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email is invalid")
     private String email;
 
-    public Entry(UUID id,String url, String username, String password, String notes, String email) {
-        this.id = id;
-        this.url = url;
-        this.username = username;
-        this.password = password;
-        this.notes = notes;
-        this.email = email;
-    }
-    
     public Entry() {
-    	this.id = UUID.randomUUID();
     }
 
     public String getId() {
-        return id.toString();
+        return id;
     }
 
     public void setId(String id) {
-        this.id = UUID.fromString(id);
+        this.id = id;
     }
 
     public String getUrl() {
@@ -76,5 +63,17 @@ public class Entry {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Entry{" +
+                "id=" + id +
+                ", url='" + url + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", notes='" + notes + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

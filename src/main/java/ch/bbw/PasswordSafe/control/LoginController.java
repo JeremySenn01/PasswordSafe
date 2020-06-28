@@ -35,7 +35,6 @@ public class LoginController {
         boolean foundUser = authService.signInUser(credentials);
 
         if (bindingResult.hasErrors()) {
-			System.out.println("has errors...");
         	return "login";
 		}
 
