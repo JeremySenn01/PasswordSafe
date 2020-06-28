@@ -10,7 +10,7 @@ public class Entry {
     private String url;
     @NotNull(message = "username can't be empty")
     private String username;
-    @NotNull(message = "username can't be empty")
+    @NotNull(message = "Password can't be empty")
     @Size(min = 5, max = 20, message = "must be between 5 and 20 characters")
     private String password;
     private String notes;
