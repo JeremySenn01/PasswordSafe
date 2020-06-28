@@ -3,6 +3,7 @@ package ch.bbw.PasswordSafe.control;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,6 @@ public class LoginController {
 
 	@GetMapping("/login")
 	public String showLogin(Model model) {
-		System.out.println("Getting login!");
 		model.addAttribute("credentials", new Credentials());
 		model.addAttribute("loginError", false);
 
@@ -31,16 +31,18 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-    public String signIn(@Valid @ModelAttribute Credentials credentials) {
-        System.out.println("signing in: " + credentials.getUsername() + " / " + credentials.getPassword());
+    public String signIn(@Valid Credentials credentials, BindingResult bindingResult) {
         boolean foundUser = authService.signInUser(credentials);
+
+        if (bindingResult.hasErrors()) {
+			System.out.println("has errors...");
+        	return "login";
+		}
 
         //Login worked
         if (foundUser) {
-        	System.out.println("got em");
             return "redirect:/safe";
         }
-    	System.out.println("aint got em");
         //login didn't work
         return "redirect:/failedLogin";
     }

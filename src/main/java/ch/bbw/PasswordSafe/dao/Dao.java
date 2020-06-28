@@ -40,7 +40,6 @@ public class Dao {
         for(User user : this.users) {
         	if (user.getId() == currentUserId) {
         		user.setEntries(encryptedEntries);
-        		System.out.println("saving entries: " + encryptedEntries.length());
         	}
         }
     }

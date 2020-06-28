@@ -42,14 +42,12 @@ public class AuthenticationService {
 	private byte[] key;
 
 	public boolean hasCurrentUser() {
-		System.out.println("current user: " + this.currentUserId);
 		return currentUserId != 0;
 	}
 	
 	public boolean signInUser(Credentials credentials) {
 		String hash = hashPw(credentials.getPassword());
 
-		System.out.println("hash: " + hash);
 
 		Optional<User> possibleUser = dao.getUserByCredentials(hash, credentials.getUsername());
 
@@ -61,7 +59,6 @@ public class AuthenticationService {
 			//if User hasn't got any entries, then nothing has to be decrypted
 			if (foundUser.getEntries() == null) {
 				this.pwService.setEntries(new ArrayList<Entry>());
-				System.out.println("entries was null....");
 			}
 			else {
 				List<Entry> entriesDecrypted = this.decryptData(foundUser.getEntries());
@@ -104,7 +101,6 @@ public class AuthenticationService {
 	}
 
 	private List<Entry> decryptData(String encryptedEntriesB64) {
-		System.out.println("decrypt: key = " + this.key.length);
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			Cipher c = Cipher.getInstance("AES");
@@ -120,7 +116,6 @@ public class AuthenticationService {
 				| IllegalBlockSizeException | IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("decrypt failure");
 		return null;
 	}
 
@@ -141,7 +136,6 @@ public class AuthenticationService {
 				| InvalidKeyException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		System.out.println("encrypt failure");
 
 		return null;
 	}
