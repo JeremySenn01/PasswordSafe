@@ -35,3 +35,8 @@ Auch könnten wir uns vorstellen einen Passwortgenerator zu implementieren. So k
 
 ### Benutzer registrieren
 In Zukunft wird es auch möglich sein, neue Benutzer zu registrieren. Dies hat den Vorteil, mehrere Benutzer gleichzeitig zu Verwalten. Jeder dieser User kann seine eigenen Einträge erstellen, sowie bearbeiten und löschen.
+
+--- 
+
+## Kurze Reflexion
+Ich würde sagen es ist uns gut gelungen, diese Arbeit umzusetzen. Wir hatten die meisten Konzepte in der Schule gelernt, aber das alles korrekt und sicher umzusetzen in wenig Zeit war herausfordernd. Wir sind uns bewusst, dass manche Stellen, genauergesagt das Session-Handling, Optimerungspotential haben. Wir sind zufrieden mit dem Resultat. 
